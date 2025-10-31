@@ -28,4 +28,4 @@ This app promotes emotional awareness, mindfulness, and overall well-being.
 
 1. Clone or download the project folder:
    ```bash
-  https://github.com/gundreddykarthik/Mental-health-wellness
+ git clone https://github.com/gundreddykarthik/Mental-health-wellness
