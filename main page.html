@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      font-family: Arial, sans-serif;
+      background-color: #e8f0fe; /* soft background tone for text area */
+    }
+
+    /* Sidebar style */
+    .sidebar {
+      width: 220px;
+      background-color: #4a69ad;
+      height: 100vh;
+      position: fixed;
+      padding: 20px;
+      color: white;
+    }
+
+    /* Main content area */
+    .content {
+      margin-left: 260px;
+      padding: 60px;
+      color: #333;
+      background-color: #f7f9fc;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .content p {
+      font-size: 20px;
+      line-height: 1.8;
+      max-width: 800px;
+      color: #2c3e50;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2 style="text-align: center;">Wellness App</h2>
+
+    <button onclick="window.location.href='home.html'" 
+            style="width: 100%; padding: 10px; margin: 5px 0; background-color: #6c5ce7; color: white; border: none; border-radius: 5px; cursor: pointer;">
+      Home
+    </button>
+
+    <button onclick="window.location.href='mood-tracker.html'" 
+            style="width: 100%; padding: 10px; margin: 5px 0; background-color: #6c5ce7; color: white; border: none; border-radius: 5px; cursor: pointer;">
+      Mood Tracker
+    </button>
+
+    <button onclick="window.location.href='chatbot.html'" 
+            style="width: 100%; padding: 10px; margin: 5px 0; background-color: #6c5ce7; color: white; border: none; border-radius: 5px; cursor: pointer;">
+      Chatbot
+    </button>
+
+    <button onclick="window.location.href='support.html'" 
+            style="width: 100%; padding: 10px; margin: 5px 0; background-color: #6c5ce7; color: white; border: none; border-radius: 5px; cursor: pointer;">
+      Support
+    </button>
+
+    <button onclick="window.location.href='about.html'" 
+            style="width: 100%; padding: 10px; margin: 5px 0; background-color: #6c5ce7; color: white; border: none; border-radius: 5px; cursor: pointer;">
+      About Us
+    </button>
+
+    <button onclick="window.location.href='signout.html'" 
+            style="width: 100%; padding: 10px; margin: 5px 0; background-color: #159bde; color: white; border: none; border-radius: 5px; cursor: pointer;">
+      Sign Out
+    </button>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <p>
+      <strong>A web-based <em>Mental Health and Wellness Platform</em></strong> designed to help users track their moods, 
+      manage stress, and receive personalized mental wellness suggestions.<br><br>
+      This app promotes emotional awareness, mindfulness, and overall well-being by combining technology 
+      with psychological insights — empowering users to lead a more balanced and healthy life.
+    </p>
+  </div>
+   
+
+</body>
+</html>

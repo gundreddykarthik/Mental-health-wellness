@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mental Health Tracker</title>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #f0f4f8;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 50px 0;
+  }
+  .tracker-container {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  }
+  h1 { color: #2a7a7b; margin-bottom: 10px; text-align: center; }
+  label { display: block; margin: 15px 0 5px; font-weight: 600; }
+  input[type="date"], input[type="number"], textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+  textarea { resize: vertical; height: 100px; }
+  button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    background: #2a7a7b;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  button:hover { background: #256b6c; }
+</style>
+</head>
+<body>
+
+<div class="tracker-container">
+  <h1>Mental Health Tracker</h1>
+
+  <label for="date">Date</label>
+  <input type="date" id="date">
+
+  <label for="mood">Mood (1-5)</label>
+  <input type="number" id="mood" min="1" max="5" placeholder="1 = low, 5 = high">
+
+  <label for="journal">Journal Entry</label>
+  <textarea id="journal" placeholder="How are you feeling today?"></textarea>
+
+  <label for="quiz">Self-Assessment Score (optional)</label>
+  <input type="number" id="quiz" min="0" max="20" placeholder="Enter quiz score">
+
+  <button id="saveBtn">Save Entry</button>
+</div>
+
+<script>
+  const saveBtn = document.getElementById("saveBtn");
+
+  let mentalHealthData = JSON.parse(localStorage.getItem("mentalHealthData")) || [];
+
+  saveBtn.addEventListener("click", () => {
+    const date = document.getElementById("date").value;
+    const mood = parseInt(document.getElementById("mood").value, 10);
+    const journal = document.getElementById("journal").value;
+    const quiz = parseInt(document.getElementById("quiz").value, 10);
+
+    if (!date) { alert("Please select a date."); return; }
+    if (isNaN(mood) || mood < 1 || mood > 5) { alert("Mood must be between 1 and 5."); return; }
+
+    const existingIndex = mentalHealthData.findIndex(entry => entry.date === date);
+    const entryData = { date, mood, journal, quiz: isNaN(quiz) ? null : quiz };
+
+    if (existingIndex > -1) {
+      mentalHealthData[existingIndex] = entryData;
+    } else {
+      mentalHealthData.push(entryData);
+    }
+
+    localStorage.setItem("mentalHealthData", JSON.stringify(mentalHealthData));
+    alert("Entry saved successfully!");
+    
+    document.getElementById("mood").value = "";
+    document.getElementById("journal").value = "";
+    document.getElementById("quiz").value = "";
+  });
+</script>
+
+</body>
+</html>
+
+

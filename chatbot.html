@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Mental Wellness — Patient ↔ Doctor Chatbots (Demo)</title>
+<style>
+  :root{
+    --bg:#0f1724;
+    --card:#0b1220;
+    --muted:#94a3b8;
+    --accent:#60a5fa;
+    --patient:#7dd3fc;
+    --doctor:#fbcfe8;
+    --glass: rgba(255,255,255,0.03);
+    --radius:14px;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    color-scheme: dark;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    min-height:100vh;
+    background: linear-gradient(180deg,#071023 0%, #071324 60%);
+    color:#e6eef8;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  }
+
+  .app {
+    width:100%;
+    max-width:960px;
+    height:88vh;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:18px;
+    box-shadow: 0 8px 30px rgba(2,6,23,0.7);
+    display:grid;
+    grid-template-columns:320px 1fr;
+    overflow:hidden;
+  }
+
+  /* left panel */
+  .sidebar{
+    background:var(--card);
+    padding:18px;
+    border-right:1px solid rgba(255,255,255,0.03);
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .brand{
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+  .logo{
+    width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#7c3aed);
+    display:flex;align-items:center;justify-content:center;font-weight:700;color:#05264b;
+    box-shadow:0 6px 18px rgba(96,165,250,0.12);
+  }
+  .title{font-weight:700;font-size:1rem}
+  .sub{font-size:12px;color:var(--muted)}
+
+  .controls{margin-top:8px;display:flex;flex-direction:column;gap:10px}
+  .segmented{
+    display:flex;border-radius:10px;background:var(--glass);padding:4px;
+  }
+  .segmented button{
+    flex:1;background:transparent;border:0;padding:8px 10px;border-radius:8px;color:var(--muted);cursor:pointer;font-weight:600;
+  }
+  .segmented button.active{
+    background:linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+    color:#fff;box-shadow: inset 0 -2px 0 rgba(255,255,255,0.02);
+  }
+  .small{
+    font-size:13px;color:var(--muted);
+  }
+
+  .preset {
+    display:flex;gap:8px;flex-wrap:wrap;
+  }
+  .chip{
+    padding:8px 10px;border-radius:999px;background:rgba(255,255,255,0.02);cursor:pointer;border:1px solid rgba(255,255,255,0.02);
+    font-size:13px;color:var(--muted)
+  }
+
+  /* right panel / chat */
+  .chat-wrap{display:flex;flex-direction:column;background:transparent;padding:18px;gap:12px}
+  .header{
+    display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--glass);border-radius:12px;
+  }
+  .roles{display:flex;gap:8px;align-items:center}
+  .role-pill{padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.02);font-weight:600;color:var(--muted)}
+  .status{font-size:13px;color:var(--muted)}
+
+  .messages{
+    flex:1;overflow:auto;padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+    display:flex;flex-direction:column;gap:10px;
+  }
+
+  .bubble{
+    max-width:78%;
+    padding:12px 14px;border-radius:14px;line-height:1.25;
+    box-shadow: 0 6px 18px rgba(2,6,23,0.5);
+    font-size:14px;
+    word-wrap:break-word;
+  }
+  .from-patient{
+    align-self:flex-start;
+    background:linear-gradient(90deg, rgba(125,211,252,0.12), rgba(125,211,252,0.06));
+    border:1px solid rgba(125,211,252,0.06);
+    color:#dff9ff;
+  }
+  .from-doctor{
+    align-self:flex-end;
+    background:linear-gradient(90deg, rgba(251,207,232,0.08), rgba(251,207,232,0.04));
+    border:1px solid rgba(251,207,232,0.06);
+    color:#fff0f6;
+  }
+  .meta{font-size:12px;color:var(--muted);margin-top:6px}
+
+  .typing{
+    display:flex;gap:6px;align-items:center;padding:8px 12px;border-radius:12px;width:max-content;background:rgba(255,255,255,0.02)
+  }
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:blink 1s infinite}
+  .dot:nth-child(2){animation-delay:.12s}
+  .dot:nth-child(3){animation-delay:.24s}
+  @keyframes blink{0%{opacity:.12}50%{opacity:1}100%{opacity:.12}}
+
+  .composer{
+    display:flex;gap:8px;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));border-radius:12px;align-items:center;
+  }
+  .input{
+    flex:1;background:transparent;border:0;outline:0;color:inherit;font-size:14px;padding:8px 10px;border-radius:10px;
+  }
+  .send-btn{
+    padding:10px 14px;border-radius:10px;background:linear-gradient(90deg,var(--accent),#7c3aed);border:0;color:#03102a;font-weight:700;cursor:pointer;
+  }
+  .small-muted{font-size:12px;color:var(--muted)}
+
+  /* responsiveness */
+  @media (max-width:820px){
+    .app{grid-template-columns:1fr; height:94vh;}
+    .sidebar{order:2;height:180px;overflow:auto}
+    .chat-wrap{order:1}
+  }
+</style>
+</head>
+<body>
+  <div class="app" role="application" aria-label="Mental wellness patient doctor chatbot demo">
+    <aside class="sidebar" aria-hidden="false">
+      <div class="brand" role="heading" aria-level="1">
+        <div class="logo">MW</div>
+        <div>
+          <div class="title">MindCare — Demo</div>
+          <div class="sub">Patient ↔ Doctor chatbots</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="small">Mode</div>
+        <div class="segmented" role="tablist">
+          <button id="mode-manual" class="active" role="tab" aria-selected="true">Manual</button>
+          <button id="mode-auto" role="tab">Auto-simulated</button>
+        </div>
+
+        <div class="small" style="margin-top:6px">Quick presets</div>
+        <div class="preset" aria-hidden="false">
+          <div class="chip" data-preset="i feel anxious lately">I feel anxious</div>
+          <div class="chip" data-preset="i'm having trouble sleeping">Trouble sleeping</div>
+          <div class="chip" data-preset="i lost interest in hobbies">Low motivation</div>
+          <div class="chip" data-preset="i'm stressed at work">Work stress</div>
+        </div>
+
+        <div>
+          <div class="small">User role (for manual send)</div>
+          <div style="margin-top:8px;display:flex;gap:8px;">
+            <button id="role-patient" class="seg-role active" data-role="patient">Patient</button>
+            <button id="role-doctor" class="seg-role" data-role="doctor">Doctor</button>
+          </div>
+        </div>
+
+        <div style="margin-top:8px">
+          <div class="small">Demo actions</div>
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <button id="clear" class="chip">Clear</button>
+            <button id="start-auto" class="chip">Start Auto</button>
+            <button id="stop-auto" class="chip">Stop Auto</button>
+          </div>
+          <div style="margin-top:8px" class="small-muted">Auto mode will make the two bots exchange short messages for demonstration.</div>
+        </div>
+
+        <div style="margin-top:auto" class="small-muted">This is a client-side demo only — replace simulated responses with your backend or AI integration for production.</div>
+      </div>
+    </aside>
+
+    <main class="chat-wrap" aria-live="polite">
+      <div class="header">
+        <div class="roles">
+          <div class="role-pill">Patient Bot</div>
+          <div style="width:8px"></div>
+          <div class="role-pill">Doctor Bot</div>
+        </div>
+        <div class="status" id="status">Mode: Manual</div>
+      </div>
+
+      <section id="messages" class="messages" role="log" aria-live="polite" aria-atomic="false">
+        <!-- messages rendered here -->
+      </section>
+
+      <div class="composer" role="form" aria-label="Send message">
+        <input id="input" class="input" placeholder="Type a message or pick a quick preset..." aria-label="Message input" />
+        <button id="send" class="send-btn">Send</button>
+      </div>
+    </main>
+  </div>
+
+<script>
+/*
+ Mental Wellness Chatbot Demo
+ - Two logical chatbots: patientBot and doctorBot
+ - Manual mode: user composes a message as Patient or Doctor (controlled by role buttons)
+ - Auto mode: bots exchange messages automatically
+ - Simple simulated replies with context keywords, emotional tone detection, and follow-ups
+*/
+
+(() => {
+  // DOM refs
+  const messagesEl = document.getElementById('messages');
+  const inputEl = document.getElementById('input');
+  const sendBtn = document.getElementById('send');
+  const modeManualBtn = document.getElementById('mode-manual');
+  const modeAutoBtn = document.getElementById('mode-auto');
+  const startAutoBtn = document.getElementById('start-auto');
+  const stopAutoBtn = document.getElementById('stop-auto');
+  const clearBtn = document.getElementById('clear');
+  const statusEl = document.getElementById('status');
+  const rolePatientBtn = document.getElementById('role-patient');
+  const roleDoctorBtn = document.getElementById('role-doctor');
+  const presetChips = document.querySelectorAll('.chip[data-preset]');
+
+  let mode = 'manual'; // 'manual' or 'auto'
+  let userRole = 'patient'; // when in manual, who is sending
+  let autoInterval = null;
+
+  // Simple chat state
+  const chat = []; // {from: 'patient'|'doctor', text: string, ts: Date}
+
+  // Utility: scroll to bottom
+  function scrollToBottom(){
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  // Render a message bubble
+  function renderMessage({from, text, ts, system=false}){
+    const wrapper = document.createElement('div');
+    wrapper.className = system ? 'meta small-muted' : 'bubble ' + (from === 'patient' ? 'from-patient' : 'from-doctor');
+    const body = document.createElement('div');
+    body.innerText = text;
+    wrapper.appendChild(body);
+    if(!system){
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+      const timeStr = (ts instanceof Date) ? ts.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
+      meta.innerText = `${from === 'patient' ? 'Patient' : 'Doctor'} • ${timeStr}`;
+      wrapper.appendChild(meta);
+    }
+    messagesEl.appendChild(wrapper);
+    scrollToBottom();
+  }
+
+  // Show typing indicator for a side
+  function showTyping(from){
+    const t = document.createElement('div');
+    t.className = 'typing';
+    t.dataset.typing = from;
+    const label = document.createElement('div');
+    label.innerText = (from === 'patient') ? 'Patient typing' : 'Doctor typing';
+    const dots = document.createElement('div');
+    dots.style.display='flex';
+    dots.style.gap='6px';
+    dots.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+    t.appendChild(dots);
+    t.appendChild(label);
+    messagesEl.appendChild(t);
+    scrollToBottom();
+    return t;
+  }
+
+  function removeTypingEl(el){
+    if(el && el.parentNode) el.parentNode.removeChild(el);
+  }
+
+  /* ---- Simulated response engine (replace with real AI backend in production) ----
+     - Very small rule-based engine that:
+       - checks for keywords and returns empathetic, instructive, or clarifying messages.
+       - maintains a simple tone detection (words like "anxious", "sad", "stressed" -> empathetic).
+       - doctor bot offers coping tips or asks clarifying q's.
+  */
+  const emotionKeywords = {
+    anxious: ['anxious','anxiety','panic','worried','nervous'],
+    depressed: ['sad','depressed','hopeless','down','unmotivated'],
+    stressed: ['stressed','stress','overwhelmed','burnout','pressure'],
+    sleep: ['sleep','insomnia','tired','rest'],
+    appetite: ['eat','appetite','hunger','weight']
+  };
+
+  function detectEmotion(text){
+    const t = text.toLowerCase();
+    for(const [emo, list] of Object.entries(emotionKeywords)){
+      for(const w of list){
+        if(t.includes(w)) return emo;
+      }
+    }
+    return null;
+  }
+
+  function patientBotGenerateReply(lastDoctorText){
+    // patient replies to doctor — often short, emotional
+    const emot = detectEmotion(lastDoctorText || '');
+    const opts = [
+      "Thank you. That helps.",
+      "I see. I'm still worried though.",
+      "Sometimes it gets worse during the night.",
+      "I tried breathing exercises, they help a little.",
+      "I don't know where to start, honestly.",
+      "I'm willing to try small steps.",
+      "Can you suggest a simple exercise?"
+    ];
+    // bias by detected emotion
+    if(emot === 'sleep') return "I still can't sleep well, any tips?";
+    if(emot === 'anxious') return "My chest feels tight and I keep worrying.";
+    if(emot === 'depressed') return "I don't feel motivated to do anything lately.";
+    // otherwise random
+    return opts[Math.floor(Math.random()*opts.length)];
+  }
+
+  function doctorBotGenerateReply(lastPatientText){
+    const text = (lastPatientText || '').toLowerCase();
+    const emot = detectEmotion(lastPatientText || '');
+    // If the patient mentions self-harm (safety): give crisis message (non-actionable)
+    const crisisWords = ['suicide','kill myself','hurt myself','want to die'];
+    for(const w of crisisWords){
+      if(text.includes(w)){
+        return "I'm really sorry you're feeling this way. If you're in immediate danger, please contact local emergency services right now. If you can, consider reaching a trusted person or a crisis line. Would you like breathing support steps I can guide you through?";
+      }
+    }
+
+    // empathetic starter
+    const empath = [
+      "I hear you — that sounds difficult. Can you tell me when this started?",
+      "Thanks for sharing — that's a brave step. How often do these feelings come?",
+      "I understand. Small changes can add up. Can I suggest a simple routine to try for a week?"
+    ];
+
+    // tips based on emotion
+    if(emot === 'sleep'){
+      return "For sleep issues: reduce screen time 1 hour before bed, keep a consistent sleep schedule, and try a 4-7-8 breathing exercise. Would you like that guided?";
+    }
+    if(emot === 'anxious'){
+      return "When anxiety spikes: try grounding (5 things you see, 4 things you feel). Slow breathing helps too. Are the worries about a specific event?";
+    }
+    if(emot === 'depressed'){
+      return "Low motivation can help from micro-tasks: pick a 5-minute activity (e.g., wash face, step outside). Would you try one now and let me know?";
+    }
+
+    // keyword-based replies
+    if(text.includes('work') || text.includes('job') || text.includes('pressure')){
+      return "Work stress is common — have you been able to take short breaks? We can plan a tiny routine (5–10 min) between tasks.";
+    }
+    if(text.includes('panic') || text.includes('panic attack')){
+      return "If you're having a panic attack: try placing both feet flat on the floor and breathing slowly. Would you like a guided breathing exercise now?";
+    }
+
+    // default
+    return empath[Math.floor(Math.random()*empath.length)];
+  }
+
+  // Add message to chat state and render
+  function addMessage(from, text, ts = new Date()){
+    const m = {from, text, ts};
+    chat.push(m);
+    renderMessage(m);
+  }
+
+  // Manual send: user composes a message as either patient or doctor
+  function manualSend(){
+    const text = inputEl.value.trim();
+    if(!text) return;
+    const sender = userRole;
+    addMessage(sender, text, new Date());
+    inputEl.value = '';
+    // other side responds
+    const other = sender === 'patient' ? 'doctor' : 'patient';
+    // small typing delay and simulated reply
+    const typingEl = showTyping(other);
+    setTimeout(() => {
+      removeTypingEl(typingEl);
+      let reply;
+      if(other === 'doctor'){
+        reply = doctorBotGenerateReply(text);
+      } else {
+        reply = patientBotGenerateReply(text);
+      }
+      addMessage(other, reply, new Date());
+    }, 800 + Math.random()*1000);
+  }
+
+  // Auto-simulated conversation loop
+  function startAutoSimulation(){
+    if(autoInterval) return;
+    mode = 'auto';
+    updateModeUI();
+    // seed initial messages if empty
+    if(chat.length === 0){
+      addMessage('patient', "I've been feeling anxious and can't sleep well.", new Date());
+    }
+    // bots will alternate messages
+    let turn = (chat[chat.length-1].from === 'patient') ? 'doctor' : 'patient';
+    autoInterval = setInterval(() => {
+      const last = chat[chat.length-1];
+      const typingEl = showTyping(turn);
+      setTimeout(() => {
+        removeTypingEl(typingEl);
+        const reply = (turn === 'doctor') ? doctorBotGenerateReply(last.text) : patientBotGenerateReply(last.text);
+        addMessage(turn, reply, new Date());
+        turn = (turn === 'patient') ? 'doctor' : 'patient';
+      }, 900 + Math.random()*1200);
+    }, 2200 + Math.random()*1000);
+  }
+  function stopAutoSimulation(){
+    if(autoInterval){
+      clearInterval(autoInterval);
+      autoInterval = null;
+    }
+  }
+
+  // UI helpers
+  function setMode(m){
+    mode = m;
+    updateModeUI();
+    if(mode === 'manual') stopAutoSimulation();
+  }
+  function updateModeUI(){
+    document.querySelectorAll('.segmented button').forEach(b => b.classList.remove('active'));
+    if(mode === 'manual') modeManualBtn.classList.add('active');
+    else modeAutoBtn.classList.add('active');
+    statusEl.innerText = `Mode: ${mode === 'manual' ? 'Manual' : 'Auto-simulated'}`;
+  }
+
+  // Event listeners
+  sendBtn.addEventListener('click', () => {
+    if(mode === 'manual') manualSend();
+  });
+  inputEl.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' && !e.shiftKey){
+      e.preventDefault();
+      if(mode === 'manual') manualSend();
+    }
+  });
+
+  modeManualBtn.addEventListener('click', () => setMode('manual'));
+  modeAutoBtn.addEventListener('click', () => setMode('auto'));
+
+  startAutoBtn.addEventListener('click', () => {
+    startAutoSimulation();
+  });
+  stopAutoBtn.addEventListener('click', () => {
+    stopAutoSimulation();
+  });
+
+  clearBtn.addEventListener('click', () => {
+    chat.length = 0;
+    messagesEl.innerHTML = '';
+    stopAutoSimulation();
+  });
+
+  // role selection
+  rolePatientBtn.addEventListener('click', () => {
+    userRole = 'patient';
+    rolePatientBtn.classList.add('active');
+    roleDoctorBtn.classList.remove('active');
+  });
+  roleDoctorBtn.addEventListener('click', () => {
+    userRole = 'doctor';
+    roleDoctorBtn.classList.add('active');
+    rolePatientBtn.classList.remove('active');
+  });
+
+  // quick presets
+  presetChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      inputEl.value = chip.dataset.preset;
+      inputEl.focus();
+    });
+  });
+
+  // start with a friendly greeting from doctor
+  addMessage('doctor', "Hello — I'm here to listen. How have you been feeling lately?", new Date());
+
+  // accessibility: focus input on load
+  inputEl.focus();
+})();
+</script>
+</body>
+</html>

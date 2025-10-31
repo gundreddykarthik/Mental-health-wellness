@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MindWell - Home</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #e6f5f0, #cde8df);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: white;
+      padding: 40px 50px;
+      border-radius: 20px;
+      box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+    }
+
+    h2 {
+      color: #008b75;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      background: #008b75;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn:hover {
+      background: #007561;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Welcome to MindWell 🌿</h2>
+    <p>You're now logged in and ready to explore your wellness journey.</p>
+
+    <button class="btn" id="signout-btn">Sign Out</button>
+  </div>
+
+  <script>
+    document.getElementById("signout-btn").addEventListener("click", function() {
+      alert("👋 You have signed out successfully!");
+      window.location.href = "login.html"; // change this to your login file name
+    });
+  </script>
+</body>
+</html>

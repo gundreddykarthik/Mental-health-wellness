@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MindWell</title>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(180deg, #e6f5f0 0%, #cce7de 100%);
+      color: #333;
+      text-align: center;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .logo-icon {
+      width: 28px;
+      height: 28px;
+      background: #00a896;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .sign-out {
+      color: #555;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .content {
+      padding: 60px 20px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: white;
+      border-radius: 20px;
+      padding: 6px 14px;
+      color: #555;
+      font-size: 14px;
+      border: 1px solid #ddd;
+    }
+
+    h1 {
+      font-size: 48px;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    h1 span {
+      color: #008b75;
+    }
+
+    p {
+      font-size: 18px;
+      color: #555;
+      max-width: 600px;
+      margin: 0 auto 30px;
+    }
+
+    .buttons {
+      margin-top: 20px;
+    }
+
+    button, .learn-more {
+      padding: 14px 26px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .start-btn {
+      background: #008b75;
+      color: white;
+      margin-right: 10px;
+    }
+
+    .start-btn:hover {
+      background: #007361;
+    }
+
+    
+    
+
+    .learn-more:hover {
+      background: #f0f0f0;
+    }
+
+    .features {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 30px;
+      font-size: 15px;
+      color: #666;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 6px;
+    }
+
+    .daily { background: #008b75; }
+    .mood { background: #4fc3a1; }
+    .crisis { background: #ff6b6b; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <div class="logo-icon"></div>
+      MindWell
+    </div>
+    
+  </header>
+
+  <div class="content">
+    <div class="tag">❤️ Your Mental Wellness Companion</div>
+    <h1>Monitor Your Mental<br><span>Wellness Journey</span></h1>
+    <p>Track your daily mood, detect early warning signs, and connect with professional support when you need it most.</p>
+
+    <div class="buttons">
+      <!-- This button now links directly to Page0.html -->
+      <button class="start-btn" onclick="window.location.href='main page.html'">Start Your Journey →</button>
+      
+    </div>
+
+    <div class="features">
+      <div><span class="dot daily"></span>Daily Check-ins</div>
+      <div><span class="dot mood"></span>Mood Tracking</div>
+      <div><span class="dot crisis"></span>Crisis Support</div>
+    </div>
+  </div>
+</body>
+</html>

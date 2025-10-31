@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mental Wellness Application Form</title>
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #a8edea, #fed6e3);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+    }
+    .form-container {
+        background: #fff;
+        padding: 25px 30px;
+        border-radius: 15px;
+        box-shadow: 0px 8px 20px rgba(0,0,0,0.1);
+        width: 90%;
+        max-width: 500px;
+    }
+    .form-container h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+    label {
+        font-weight: 600;
+        margin-top: 10px;
+        display: block;
+    }
+    input, select, textarea {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+    }
+    input:focus, select:focus, textarea:focus {
+        border-color: #5c9ead;
+    }
+    textarea {
+        resize: none;
+        height: 80px;
+    }
+    .radio-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 5px;
+    }
+    .submit-btn {
+        width: 100%;
+        background-color: #5c9ead;
+        color: #fff;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: 0.3s;
+    }
+    .submit-btn:hover {
+        background-color: #468b91;
+    }
+    @media (max-width: 600px) {
+        .form-container {
+            padding: 20px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>🧘‍♀️ Mental Wellness Application Form</h2>
+    <form id="wellnessForm">
+        <label>Full Name</label>
+        <input type="text" id="name" placeholder="Enter your full name" required>
+
+        <label>Age</label>
+        <input type="number" id="age" placeholder="Enter your age" min="10" max="100" required>
+
+        <label>Gender</label>
+        <select id="gender" required>
+            <option value="">Select gender</option>
+            <option>Female</option>
+            <option>Male</option>
+        </select>
+
+        <label>Current Mood</label>
+        <select id="mood" required>
+            <option value="">Select mood</option>
+            <option>Happy 😀</option>
+            <option>Calm 😌</option>
+            <option>Stressed 😣</option>
+            <option>Sad 😞</option>
+            <option>Anxious 😰</option>
+        </select>
+
+        <label>Do you experience frequent mood swings?</label>
+        <div class="radio-group">
+            <label><input type="radio" name="moodswings" value="Yes" required> Yes</label>
+            <label><input type="radio" name="moodswings" value="No"> No</label>
+        </div>
+
+        <label>How often do you practice relaxation or meditation?</label>
+        <select id="relax" required>
+            <option value="select frequency">Select frequency</option>
+            <option>Daily</option>
+            <option>Few times a week</option>
+            <option>Rarely</option>
+            <option>Never</option>
+        </select>
+
+        <label>Food Habits</label>
+        <select id="food habits" required>
+            <option value="select">select</option>
+            <option>Home food</option>
+            <option>outside food twice a week</option>
+        </select>
+
+        <label>Sleeping Time</label>
+        <select id="sleeping time" required>
+            <option value="select">select</option>
+            <option>before 11pm</option>
+            <option>after 11pm</option>
+        </select>
+
+        <label>Stress Level</label>
+        <select id="stress level" required>
+            <option value="select">select</option>
+            <option>rarely</option>
+            <option>never</option>
+            <option>sometimes</option>
+            <option>often</option>
+            <option>almost always</option>
+        </select>
+
+        <label>Feed Group</label>
+        <select id="feed group" required>
+            <option value="select">select</option>
+            <option>Daily</option>
+            <option>Weekly</option>
+            <option>Monthly</option>
+            <option>Quarterly</option>
+            <option>Rarely</option>
+        </select>
+
+        <label>Job Working Hours</label>
+        <select id="Job Working Hours" required>
+            <option value="select">select</option>
+            <option>6hrs</option>
+            <option>8hrs</option>
+            <option>more than 8hrs</option>
+        </select>
+
+        <label>Screen Time</label>
+        <select id="Screen Time" required>
+            <option value="select">select</option>
+            <option>less than 5hrs</option> 
+            <option>5hrs</option>
+            <option>8hrs</option>
+            <option>more than 10hrs</option>
+        </select>
+
+        <label>Relationship Problems</label>
+        <select id="Relationship problems" required>
+            <option value="select">select</option>
+            <option>Husband</option>
+            <option>Wife</option>
+            <option>Siblings</option>
+            <option>Friends</option>
+            <option>Others</option>
+            <option>None</option>
+        </select>
+
+        <label>Involvement of Social Groups</label>
+        <select id="Involvement of Social Groups" required>
+            <option value="select">select</option>
+            <option>Yes</option>
+            <option>No</option>
+        </select>
+
+        <label>Effected by COVID</label>
+        <select id="Are you effected by COVID" required>
+            <option value="select">select</option>
+            <option>Yes</option>
+            <option>No</option>
+        </select>
+
+        <label>Briefly describe your current emotional state:</label>
+        <textarea id="message" placeholder="Share how you’ve been feeling lately..." required></textarea>
+
+        <label>
+            <input type="checkbox" id="consent" required>
+            I consent to share my information for mental wellness assessment.
+        </label>
+
+        <button type="submit" class="submit-btn">Submit Application</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById("wellnessForm").addEventListener("submit", function(e){
+        e.preventDefault(); // prevent form from submitting normally
+        // Redirect to Page4.html
+        window.location.href = "Page4.html"; // Make sure Page4.html is in the same folder
+    });
+</script>
+
+</body>
+</html>
